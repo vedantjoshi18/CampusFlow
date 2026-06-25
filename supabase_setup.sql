@@ -36,8 +36,14 @@ create policy "Users manage own profile" on profiles
 create or replace function handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id)
-  values (new.id);
+  insert into public.profiles (id, name, phone, branch, year)
+  values (
+    new.id,
+    new.raw_user_meta_data->>'name',
+    new.raw_user_meta_data->>'phone',
+    new.raw_user_meta_data->>'branch',
+    (new.raw_user_meta_data->>'year')::integer
+  );
   return new;
 end;
 $$ language plpgsql security definer;
