@@ -3,6 +3,7 @@ import { supabase } from '../config/supabase.js';
 
 export interface AuthRequest extends Request {
   userId?: string;
+  token?: string;
 }
 
 export const verifyToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -23,6 +24,7 @@ export const verifyToken = async (req: AuthRequest, res: Response, next: NextFun
     }
 
     req.userId = data.user.id;
+    req.token = token;
     next();
   } catch {
     return res.status(401).json({ success: false, message: 'Token verification failed' });
