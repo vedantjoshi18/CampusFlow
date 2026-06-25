@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Bot, FileText, CheckCircle2, Clock, Plus, Target, Sparkles, BookOpen } from 'lucide-react'
 import Link from 'next/link'
+import { DailyBriefing } from '@/components/dashboard/DailyBriefing'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -83,18 +84,7 @@ export default async function Dashboard() {
           </Card>
         </Link>
         
-        <Card className="border-0 shadow-lg bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20" />
-          <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-            <CardTitle className="text-sm font-bold text-slate-300 uppercase tracking-wide">AI Study Tip</CardTitle>
-            <Sparkles className="w-5 h-5 text-yellow-400" />
-          </CardHeader>
-          <CardContent className="relative z-10">
-            <p className="text-base font-medium leading-relaxed text-slate-100">
-              &ldquo;Breaking your OS study session into 25-minute Pomodoro intervals will boost your retention by 40%.&rdquo;
-            </p>
-          </CardContent>
-        </Card>
+        <DailyBriefing />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -134,19 +124,19 @@ export default async function Dashboard() {
           <div>
             <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-4">Quick Actions</h2>
             <div className="grid grid-cols-2 gap-4">
-              <button className="flex flex-col items-center justify-center p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:border-blue-500 hover:shadow-md transition-all group">
+              <Link href="/dashboard/study-buddy" className="flex flex-col items-center justify-center p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:border-blue-500 hover:shadow-md transition-all group">
                 <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-3 group-hover:scale-110 transition-transform">
                   <Bot className="w-6 h-6" />
                 </div>
                 <span className="text-sm font-bold text-slate-700 dark:text-slate-300">Study Buddy</span>
-              </button>
+              </Link>
               
-              <button className="flex flex-col items-center justify-center p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:border-blue-500 hover:shadow-md transition-all group">
+              <Link href="/dashboard/notice-summarizer" className="flex flex-col items-center justify-center p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:border-blue-500 hover:shadow-md transition-all group">
                 <div className="w-12 h-12 rounded-full bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-3 group-hover:scale-110 transition-transform">
                   <FileText className="w-6 h-6" />
                 </div>
                 <span className="text-sm font-bold text-slate-700 dark:text-slate-300">Summarize</span>
-              </button>
+              </Link>
             </div>
           </div>
 
