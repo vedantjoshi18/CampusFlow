@@ -41,12 +41,12 @@ export default function TasksPage() {
 
   const handleAdd = async (dto: CreateTaskDto) => {
     const res = await tasksApi.create(dto)
-    setTasks(prev => [res.task, ...prev])
+    setTasks(prev => [{ ...res.task, automation_status: res.automation?.status, automation_error: res.automation?.error }, ...prev])
   }
 
   const handleUpdate = async (id: string, dto: UpdateTaskDto) => {
     const res = await tasksApi.update(id, dto)
-    setTasks(prev => prev.map(t => (t.id === id ? res.task : t)))
+    setTasks(prev => prev.map(t => (t.id === id ? { ...res.task, automation_status: res.automation?.status, automation_error: res.automation?.error } : t)))
   }
 
   const handleDelete = async (id: string) => {

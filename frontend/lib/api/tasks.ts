@@ -13,6 +13,8 @@ export interface Task {
   completed: boolean;
   add_to_calendar: boolean;
   created_at: string;
+  automation_status?: 'queued' | 'skipped' | 'failed';
+  automation_error?: string;
 }
 
 export interface CreateTaskDto {
@@ -22,6 +24,17 @@ export interface CreateTaskDto {
   deadline?: string;
   priority?: 'low' | 'medium' | 'high';
   add_to_calendar?: boolean;
+}
+
+export interface AutomationResult {
+  status: 'queued' | 'skipped' | 'failed';
+  error?: string;
+}
+
+export interface TaskMutationResponse {
+  success: boolean;
+  task: Task;
+  automation?: AutomationResult;
 }
 
 export interface UpdateTaskDto {
@@ -64,12 +77,12 @@ export const tasksApi = {
   getOne: (id: string) =>
     apiFetch<{ success: boolean; task: Task }>(`/api/v1/tasks/${id}`),
   create: (dto: CreateTaskDto) =>
-    apiFetch<{ success: boolean; task: Task }>('/api/v1/tasks', {
+    apiFetch<TaskMutationResponse>('/api/v1/tasks', {
       method: 'POST',
       body: JSON.stringify(dto),
     }),
   update: (id: string, dto: UpdateTaskDto) =>
-    apiFetch<{ success: boolean; task: Task }>(`/api/v1/tasks/${id}`, {
+    apiFetch<TaskMutationResponse>(`/api/v1/tasks/${id}`, {
       method: 'PUT',
       body: JSON.stringify(dto),
     }),

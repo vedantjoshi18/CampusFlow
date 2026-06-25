@@ -2,6 +2,7 @@ import type { Response } from 'express';
 import { getScopedClient } from '../config/supabase.js';
 import type { AuthRequest } from '../middleware/auth.middleware.js';
 import type { CreateTaskDto, UpdateTaskDto } from '../types/task.types.js';
+import { automationShouldRunForUpdate, triggerTaskAutomation } from '../services/task-automation.service.js';
 
 // GET /api/v1/tasks
 export const getTasks = async (req: AuthRequest, res: Response) => {
@@ -86,7 +87,27 @@ export const createTask = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ success: false, message: error.message });
     }
 
-    res.status(201).json({ success: true, task: data });
+    let automationStatus: 'queued' | 'skipped' | 'failed' = 'skipped';
+    let automationError: string | undefined;
+
+    try {
+      const automationResult = await triggerTaskAutomation(req, data, 'created');
+      automationStatus = automationResult.status;
+      automationError = automationResult.reason;
+    } catch (automationFailure: any) {
+      automationStatus = 'failed';
+      automationError = automationFailure.message;
+      console.error('Task automation failed:', automationFailure);
+    }
+
+    res.status(201).json({
+      success: true,
+      task: data,
+      automation: {
+        status: automationStatus,
+        error: automationError,
+      },
+    });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -100,6 +121,18 @@ export const updateTask = async (req: AuthRequest, res: Response) => {
     const updates: UpdateTaskDto = req.body;
 
     const supabase = getScopedClient(req.token!);
+
+    const { data: existingTask, error: existingError } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single();
+
+    if (existingError || !existingTask) {
+      return res.status(404).json({ success: false, message: 'Task not found or update failed' });
+    }
+
     const { data, error } = await supabase
       .from('tasks')
       .update(updates)
@@ -112,7 +145,29 @@ export const updateTask = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ success: false, message: 'Task not found or update failed' });
     }
 
-    res.json({ success: true, task: data });
+    let automationStatus: 'queued' | 'skipped' | 'failed' = 'skipped';
+    let automationError: string | undefined;
+
+    if (automationShouldRunForUpdate(data, existingTask, updates)) {
+      try {
+        const automationResult = await triggerTaskAutomation(req, data, 'updated');
+        automationStatus = automationResult.status;
+        automationError = automationResult.reason;
+      } catch (automationFailure: any) {
+        automationStatus = 'failed';
+        automationError = automationFailure.message;
+        console.error('Task automation failed:', automationFailure);
+      }
+    }
+
+    res.json({
+      success: true,
+      task: data,
+      automation: {
+        status: automationStatus,
+        error: automationError,
+      },
+    });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }

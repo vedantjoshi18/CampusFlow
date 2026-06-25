@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  CheckCircle2, Circle, Trash2, Tag, Calendar, Clock, ChevronDown
+  CheckCircle2, Circle, Trash2, Tag, Calendar, Clock, ChevronDown, Sparkles, AlertCircle
 } from 'lucide-react'
 import type { Task, UpdateTaskDto } from '@/lib/api/tasks'
 
@@ -188,6 +188,20 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
                 >
                   {deadline.urgent ? <Clock className="w-3 h-3" /> : <Calendar className="w-3 h-3" />}
                   {deadline.label}
+                </span>
+              )}
+
+              {task.automation_status && (
+                <span
+                  className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md"
+                  style={{
+                    backgroundColor: task.automation_status === 'failed' ? 'oklch(60% 0.20 25 / 0.1)' : 'oklch(50% 0.16 250 / 0.08)',
+                    color: task.automation_status === 'failed' ? 'var(--destructive)' : 'var(--color-accent)',
+                  }}
+                  title={task.automation_error || undefined}
+                >
+                  {task.automation_status === 'failed' ? <AlertCircle className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
+                  {task.automation_status === 'queued' ? 'Calendar sync queued' : task.automation_status === 'failed' ? 'Sync failed' : 'Sync skipped'}
                 </span>
               )}
             </div>

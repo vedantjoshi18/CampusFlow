@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
@@ -6,7 +7,7 @@ const supabaseKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY;
 const hasSupabaseConfig = Boolean(supabaseUrl && supabaseKey);
 
-export const createClient = async () => {
+export const createClient = async (): Promise<SupabaseClient> => {
   if (!hasSupabaseConfig) {
     return {
       auth: {
@@ -15,7 +16,7 @@ export const createClient = async () => {
           error: null,
         }),
       },
-    } as const;
+    } as unknown as SupabaseClient;
   }
 
   const cookieStore = await cookies();

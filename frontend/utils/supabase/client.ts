@@ -1,11 +1,12 @@
 import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
 const supabaseKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY;
 const hasSupabaseConfig = Boolean(supabaseUrl && supabaseKey);
 
-export const createClient = () => {
+export const createClient = (): SupabaseClient => {
   if (!hasSupabaseConfig) {
     return {
       auth: {
@@ -16,7 +17,7 @@ export const createClient = () => {
         }),
         signOut: async () => ({ error: null }),
       },
-    } as const;
+    } as unknown as SupabaseClient;
   }
 
   return createBrowserClient(supabaseUrl!, supabaseKey!);
