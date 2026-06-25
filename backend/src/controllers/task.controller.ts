@@ -1,5 +1,5 @@
 import type { Response } from 'express';
-import { supabase } from '../config/supabase.js';
+import { getScopedClient } from '../config/supabase.js';
 import type { AuthRequest } from '../middleware/auth.middleware.js';
 import type { CreateTaskDto, UpdateTaskDto } from '../types/task.types.js';
 
@@ -9,6 +9,7 @@ export const getTasks = async (req: AuthRequest, res: Response) => {
     const userId = req.userId;
     const { completed } = req.query;
 
+    const supabase = getScopedClient(req.token!);
     let query = supabase
       .from('tasks')
       .select('*')
@@ -37,6 +38,7 @@ export const getTask = async (req: AuthRequest, res: Response) => {
     const userId = req.userId;
     const { id } = req.params;
 
+    const supabase = getScopedClient(req.token!);
     const { data, error } = await supabase
       .from('tasks')
       .select('*')
@@ -64,6 +66,7 @@ export const createTask = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ success: false, message: 'Title is required' });
     }
 
+    const supabase = getScopedClient(req.token!);
     const { data, error } = await supabase
       .from('tasks')
       .insert([{
@@ -96,6 +99,7 @@ export const updateTask = async (req: AuthRequest, res: Response) => {
     const { id } = req.params;
     const updates: UpdateTaskDto = req.body;
 
+    const supabase = getScopedClient(req.token!);
     const { data, error } = await supabase
       .from('tasks')
       .update(updates)
@@ -120,6 +124,7 @@ export const deleteTask = async (req: AuthRequest, res: Response) => {
     const userId = req.userId;
     const { id } = req.params;
 
+    const supabase = getScopedClient(req.token!);
     const { error } = await supabase
       .from('tasks')
       .delete()

@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { supabase } from '../config/supabase';
+import { supabase, getScopedClient } from '../config/supabase';
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -21,8 +21,9 @@ export const register = async (req: Request, res: Response) => {
 
     // 2. Update profile with extra info
     // (Assuming the handle_new_user trigger has already created the row)
-    if (authData.user) {
-      const { error: profileError } = await supabase
+    if (authData.user && authData.session?.access_token) {
+      const userSupabase = getScopedClient(authData.session.access_token);
+      const { error: profileError } = await userSupabase
         .from('profiles')
         .update({ name, phone, branch, year, subjects })
         .eq('id', authData.user.id);
