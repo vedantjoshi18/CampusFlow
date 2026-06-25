@@ -9,6 +9,7 @@ export const createClient = () => {
   if (!hasSupabaseConfig) {
     return {
       auth: {
+        getSession: async () => ({ data: { session: null }, error: null }),
         signInWithPassword: async () => ({
           data: { session: null, user: null },
           error: new Error("Supabase environment variables are not configured."),

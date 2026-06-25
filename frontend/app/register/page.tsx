@@ -22,10 +22,8 @@ export default function RegisterPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
+
     try {
-      // Calling our custom backend API for registration so it handles the profile creation logic
-      // Note: Make sure the backend server is running on port 5000 and has CORS enabled!
       const res = await fetch('http://localhost:5000/api/v1/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,7 +40,6 @@ export default function RegisterPage() {
         throw new Error(data.message || 'Failed to register')
       }
 
-      // Registration successful
       router.push('/login?registered=true')
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'Failed to register')
@@ -55,70 +52,82 @@ export default function RegisterPage() {
     <AuthLayout title="Create an account" subtitle="Join CampusFlow and boost your productivity.">
       <form onSubmit={handleRegister} className="space-y-5">
         {error && (
-          <div className="p-4 text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 rounded-xl border border-red-100 dark:border-red-900/50">
+          <div
+            className="p-4 text-sm font-medium rounded-lg border"
+            style={{
+              backgroundColor: 'oklch(60% 0.20 25 / 0.08)',
+              color: 'var(--destructive)',
+              borderColor: 'oklch(60% 0.20 25 / 0.15)',
+            }}
+          >
             {error}
           </div>
         )}
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
+            <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Full Name</label>
             <input
               type="text"
               required
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+              className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+              style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-rule)', color: 'var(--color-ink)' }}
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Phone</label>
+            <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Phone</label>
             <input
               type="tel"
               required
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+              className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+              style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-rule)', color: 'var(--color-ink)' }}
             />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email address</label>
+          <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Email address</label>
           <input
             type="email"
             required
             value={formData.email}
             onChange={(e) => setFormData({...formData, email: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+            className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+            style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-rule)', color: 'var(--color-ink)' }}
           />
         </div>
-        
+
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+          <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Password</label>
           <input
             type="password"
             required
             value={formData.password}
             onChange={(e) => setFormData({...formData, password: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+            className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+            style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-rule)', color: 'var(--color-ink)' }}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-5">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Branch</label>
+            <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Branch</label>
             <input
               type="text"
               required
               value={formData.branch}
               onChange={(e) => setFormData({...formData, branch: e.target.value})}
               placeholder="e.g. CSE"
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+              className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+              style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-rule)', color: 'var(--color-ink)' }}
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Year</label>
+            <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Year</label>
             <input
               type="number"
               min="1" max="5"
@@ -126,7 +135,8 @@ export default function RegisterPage() {
               value={formData.year}
               onChange={(e) => setFormData({...formData, year: e.target.value})}
               placeholder="e.g. 3"
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+              className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+              style={{ backgroundColor: 'var(--color-paper)', borderColor: 'var(--color-rule)', color: 'var(--color-ink)' }}
             />
           </div>
         </div>
@@ -134,18 +144,19 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 px-4 mt-4 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-70 flex justify-center items-center"
+          className="w-full py-3 px-4 mt-4 rounded-lg text-sm font-semibold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-70 flex justify-center items-center"
+          style={{ backgroundColor: 'var(--color-accent)', color: 'var(--primary-foreground)' }}
         >
           {loading ? (
-             <div className="w-5 h-5 border-2 border-slate-400 border-t-white dark:border-slate-300 dark:border-t-slate-900 rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--primary-foreground)', borderTopColor: 'transparent' }} />
           ) : (
             'Sign Up'
           )}
         </button>
       </form>
-      <div className="text-center font-medium text-slate-500 dark:text-slate-400 mt-6">
+      <div className="text-center text-sm font-medium mt-6" style={{ color: 'var(--color-ink-2)' }}>
         Already have an account?{' '}
-        <Link href="/login" className="font-bold text-blue-600 hover:text-blue-500 transition-colors">
+        <Link href="/login" className="font-semibold transition-opacity hover:opacity-70" style={{ color: 'var(--color-accent)' }}>
           Sign in
         </Link>
       </div>

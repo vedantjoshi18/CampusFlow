@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Plus, Loader2, AlignLeft, Tag, Calendar, Flag, BookOpen } from 'lucide-react'
+import { X, Plus, Loader2, AlignLeft, Calendar, Flag, BookOpen } from 'lucide-react'
 import type { CreateTaskDto } from '@/lib/api/tasks'
 
 interface AddTaskModalProps {
@@ -12,9 +12,9 @@ interface AddTaskModalProps {
 }
 
 const PRIORITIES = [
-  { value: 'low', label: 'Low', color: 'bg-emerald-500', ring: 'ring-emerald-400', text: 'text-emerald-600 dark:text-emerald-400' },
-  { value: 'medium', label: 'Medium', color: 'bg-amber-400', ring: 'ring-amber-400', text: 'text-amber-600 dark:text-amber-400' },
-  { value: 'high', label: 'High', color: 'bg-red-500', ring: 'ring-red-400', text: 'text-red-600 dark:text-red-400' },
+  { value: 'low', label: 'Low', accent: 'oklch(55% 0.14 150)', bg: 'oklch(55% 0.14 150 / 0.1)', text: 'oklch(50% 0.12 150)' },
+  { value: 'medium', label: 'Medium', accent: 'oklch(65% 0.16 75)', bg: 'oklch(65% 0.16 75 / 0.1)', text: 'oklch(60% 0.14 75)' },
+  { value: 'high', label: 'High', accent: 'oklch(60% 0.20 25)', bg: 'oklch(60% 0.20 25 / 0.1)', text: 'oklch(55% 0.18 25)' },
 ]
 
 export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
@@ -63,9 +63,6 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
     }
   }
 
-  const inputClass =
-    'w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm'
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -76,47 +73,64 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-40"
+            style={{ backgroundColor: 'oklch(0% 0 0 / 0.3)' }}
           />
 
           {/* Modal panel */}
           <motion.div
-            initial={{ opacity: 0, y: 60, scale: 0.96 }}
+            initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.96 }}
-            transition={{ type: 'spring', stiffness: 320, damping: 30 }}
+            exit={{ opacity: 0, y: 20, scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 28 }}
             className="fixed inset-x-4 bottom-0 sm:inset-auto sm:left-1/2 sm:-translate-x-1/2 sm:top-1/2 sm:-translate-y-1/2 z-50 w-full sm:max-w-lg"
           >
-            <div className="bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden">
+            <div
+              className="rounded-t-2xl sm:rounded-2xl border overflow-hidden shadow-xl"
+              style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-rule)' }}
+            >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b" style={{ borderColor: 'var(--color-rule)' }}>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 flex items-center justify-center shadow-md">
-                    <Plus className="w-5 h-5 text-white" />
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--color-accent)' }}
+                  >
+                    <Plus className="w-5 h-5" style={{ color: 'var(--primary-foreground)' }} />
                   </div>
-                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">New Task</h2>
+                  <h2 className="text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>New Task</h2>
                 </div>
                 <button
                   id="add-task-modal-close"
                   onClick={handleClose}
-                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="p-2 rounded-md transition-colors"
+                  style={{ color: 'var(--color-ink-2)' }}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--color-paper-2)'}
+                  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
+              <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
                 {error && (
-                  <div className="px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium border border-red-100 dark:border-red-900/30">
+                  <div
+                    className="px-4 py-3 rounded-lg text-sm font-medium border"
+                    style={{
+                      backgroundColor: 'oklch(60% 0.20 25 / 0.08)',
+                      color: 'var(--destructive)',
+                      borderColor: 'oklch(60% 0.20 25 / 0.15)',
+                    }}
+                  >
                     {error}
                   </div>
                 )}
 
                 {/* Title */}
                 <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                    <Plus className="w-3.5 h-3.5" /> Title <span className="text-red-400">*</span>
+                  <label className="flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-ink-2)' }}>
+                    <Plus className="w-3 h-3" /> Title
                   </label>
                   <input
                     id="task-title-input"
@@ -125,7 +139,12 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
                     placeholder="e.g. Submit OS Assignment"
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
-                    className={inputClass}
+                    className="w-full px-4 py-2.5 rounded-lg text-sm border transition-all placeholder:opacity-50"
+                    style={{
+                      backgroundColor: 'var(--color-paper)',
+                      borderColor: 'var(--color-rule)',
+                      color: 'var(--color-ink)',
+                    }}
                     autoFocus
                   />
                 </div>
@@ -133,8 +152,8 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
                 {/* Subject + Priority row */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                      <BookOpen className="w-3.5 h-3.5" /> Subject
+                    <label className="flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-ink-2)' }}>
+                      <BookOpen className="w-3 h-3" /> Subject
                     </label>
                     <input
                       id="task-subject-input"
@@ -142,25 +161,31 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
                       placeholder="e.g. Computer Networks"
                       value={form.subject}
                       onChange={e => setForm({ ...form, subject: e.target.value })}
-                      className={inputClass}
+                      className="w-full px-4 py-2.5 rounded-lg text-sm border transition-all placeholder:opacity-50"
+                      style={{
+                        backgroundColor: 'var(--color-paper)',
+                        borderColor: 'var(--color-rule)',
+                        color: 'var(--color-ink)',
+                      }}
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                      <Flag className="w-3.5 h-3.5" /> Priority
+                    <label className="flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-ink-2)' }}>
+                      <Flag className="w-3 h-3" /> Priority
                     </label>
-                    <div className="flex gap-2 pt-1">
+                    <div className="flex gap-2 pt-0.5">
                       {PRIORITIES.map(p => (
                         <button
                           key={p.value}
                           type="button"
                           id={`priority-${p.value}`}
                           onClick={() => setForm({ ...form, priority: p.value as any })}
-                          className={`flex-1 py-2 rounded-xl text-xs font-bold border transition-all ${
-                            form.priority === p.value
-                              ? `${p.color} text-white border-transparent shadow-md scale-105`
-                              : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-slate-300'
-                          }`}
+                          className="flex-1 py-2 rounded-lg text-xs font-semibold border transition-all"
+                          style={{
+                            backgroundColor: form.priority === p.value ? p.accent : 'var(--color-paper)',
+                            color: form.priority === p.value ? '#fff' : p.text,
+                            borderColor: form.priority === p.value ? 'transparent' : 'var(--color-rule)',
+                          }}
                         >
                           {p.label}
                         </button>
@@ -171,22 +196,27 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
 
                 {/* Deadline */}
                 <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                    <Calendar className="w-3.5 h-3.5" /> Deadline
+                  <label className="flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-ink-2)' }}>
+                    <Calendar className="w-3 h-3" /> Deadline
                   </label>
                   <input
                     id="task-deadline-input"
                     type="datetime-local"
                     value={form.deadline}
                     onChange={e => setForm({ ...form, deadline: e.target.value })}
-                    className={inputClass}
+                    className="w-full px-4 py-2.5 rounded-lg text-sm border transition-all"
+                    style={{
+                      backgroundColor: 'var(--color-paper)',
+                      borderColor: 'var(--color-rule)',
+                      color: 'var(--color-ink)',
+                    }}
                   />
                 </div>
 
                 {/* Description */}
                 <div className="space-y-1.5">
-                  <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                    <AlignLeft className="w-3.5 h-3.5" /> Description
+                  <label className="flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--color-ink-2)' }}>
+                    <AlignLeft className="w-3 h-3" /> Description
                   </label>
                   <textarea
                     id="task-description-input"
@@ -194,25 +224,32 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
                     value={form.description}
                     onChange={e => setForm({ ...form, description: e.target.value })}
                     rows={3}
-                    className={`${inputClass} resize-none`}
+                    className="w-full px-4 py-2.5 rounded-lg text-sm border transition-all resize-none placeholder:opacity-50"
+                    style={{
+                      backgroundColor: 'var(--color-paper)',
+                      borderColor: 'var(--color-rule)',
+                      color: 'var(--color-ink)',
+                    }}
                   />
                 </div>
 
                 {/* Calendar toggle */}
-                <label className="flex items-center gap-3 py-2 cursor-pointer group">
+                <label className="flex items-center gap-3 py-1 cursor-pointer group">
                   <div
                     onClick={() => setForm({ ...form, add_to_calendar: !form.add_to_calendar })}
-                    className={`relative w-10 h-5.5 rounded-full transition-colors duration-200 ${
-                      form.add_to_calendar ? 'bg-blue-600' : 'bg-slate-200 dark:bg-slate-700'
-                    }`}
+                    className="relative w-10 h-5 rounded-full transition-colors duration-200"
+                    style={{
+                      backgroundColor: form.add_to_calendar ? 'var(--color-accent)' : 'var(--color-rule)',
+                    }}
                   >
                     <span
-                      className={`absolute top-0.5 left-0.5 w-4.5 h-4.5 bg-white rounded-full shadow transition-transform duration-200 ${
-                        form.add_to_calendar ? 'translate-x-4.5' : ''
-                      }`}
+                      className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200"
+                      style={{
+                        transform: form.add_to_calendar ? 'translateX(20px)' : 'translateX(0)',
+                      }}
                     />
                   </div>
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                  <span className="text-sm font-medium transition-colors" style={{ color: 'var(--color-ink-2)' }}>
                     Add to Google Calendar
                   </span>
                 </label>
@@ -222,11 +259,12 @@ export function AddTaskModal({ isOpen, onClose, onAdd }: AddTaskModalProps) {
                   id="add-task-submit"
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 text-white font-bold text-sm shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-emerald-600 transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-lg text-sm font-semibold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{ backgroundColor: 'var(--color-accent)', color: 'var(--primary-foreground)' }}
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> Creating…
+                      <Loader2 className="w-4 h-4 animate-spin" /> Creating...
                     </>
                   ) : (
                     <>
