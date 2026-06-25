@@ -20,7 +20,7 @@ export default function LoginPage() {
     setError('')
     
     // We use Supabase client directly since Next.js + Supabase handles secure sessions gracefully
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+    const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
@@ -85,7 +85,7 @@ export default function LoginPage() {
         </button>
       </form>
       <div className="text-center text-slate-500 dark:text-slate-400 mt-6 font-medium">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <Link href="/register" className="font-bold text-blue-600 hover:text-blue-500 transition-colors">
           Create one now
         </Link>

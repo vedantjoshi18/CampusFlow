@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { supabase } from '../config/supabase';
 
 export const register = async (req: Request, res: Response) => {

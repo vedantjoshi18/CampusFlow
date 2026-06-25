@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, CheckSquare, Calendar, Bot, User, Bell, LogOut } from 'lucide-react'
+import { LayoutDashboard, CheckSquare, Calendar, Bot, User, LogOut } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 

@@ -1,8 +1,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Bot, Calendar, FileText, CheckCircle2, Clock, Plus, Target, Sparkles, BookOpen } from 'lucide-react'
+import { Bot, FileText, CheckCircle2, Clock, Plus, Target, Sparkles, BookOpen } from 'lucide-react'
 
 export default async function Dashboard() {
   const supabase = await createClient()
@@ -21,7 +20,7 @@ export default async function Dashboard() {
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}! 👋
           </h1>
-          <p className="text-slate-500 mt-1 text-lg">Here's what's happening with your academics today.</p>
+          <p className="text-slate-500 mt-1 text-lg">Here&apos;s what&apos;s happening with your academics today.</p>
         </div>
         <Button className="bg-gradient-to-r from-blue-600 to-emerald-500 text-white border-0 shadow-lg hover:shadow-xl transition-all rounded-xl h-11 px-6">
           <Plus className="w-5 h-5 mr-2" /> New Task
@@ -60,7 +59,7 @@ export default async function Dashboard() {
           </CardHeader>
           <CardContent className="relative z-10">
             <p className="text-base font-medium leading-relaxed text-slate-100">
-              "Breaking your OS study session into 25-minute Pomodoro intervals will boost your retention by 40%."
+              &ldquo;Breaking your OS study session into 25-minute Pomodoro intervals will boost your retention by 40%.&rdquo;
             </p>
           </CardContent>
         </Card>
@@ -72,7 +71,7 @@ export default async function Dashboard() {
         <div className="lg:col-span-2 space-y-8">
           
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">Today's Schedule</h2>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">Today&apos;s Schedule</h2>
             <Button variant="ghost" size="sm" className="text-blue-600 font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg">View Calendar</Button>
           </div>
           

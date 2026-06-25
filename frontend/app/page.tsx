@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 
 export default function Home() {
   return (
@@ -18,15 +17,11 @@ export default function Home() {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-8">
-          <Link href="/login">
-            <Button size="lg" className="w-full sm:w-auto bg-white text-slate-900 hover:bg-slate-100 font-extrabold px-10 py-7 text-lg rounded-xl shadow-xl transition-all hover:scale-105 active:scale-95">
-              Get Started
-            </Button>
+          <Link href="/login" className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-white px-10 py-7 text-lg font-extrabold text-slate-900 shadow-xl transition-all hover:scale-105 hover:bg-slate-100 active:scale-95">
+            Get Started
           </Link>
-          <Link href="/register">
-            <Button size="lg" variant="ghost" className="w-full sm:w-auto text-slate-300 hover:text-white hover:bg-slate-800/50 font-bold px-10 py-7 text-lg rounded-xl transition-all">
-              Create Account
-            </Button>
+          <Link href="/register" className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl px-10 py-7 text-lg font-bold text-slate-300 transition-all hover:bg-slate-800/50 hover:text-white">
+            Create Account
           </Link>
         </div>
       </div>
