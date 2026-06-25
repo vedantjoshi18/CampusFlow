@@ -13,6 +13,15 @@ export const register = async (req: Request, res: Response) => {
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          name,
+          phone,
+          branch,
+          year,
+          subjects
+        }
+      }
     });
 
     if (authError) {
