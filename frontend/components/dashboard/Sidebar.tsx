@@ -26,16 +26,21 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 lg:flex flex-col">
-      <div className="flex items-center h-16 px-6 border-b border-slate-200 dark:border-slate-800">
-        <div className="flex items-center gap-2 text-blue-600 dark:text-blue-500">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-emerald-400 flex items-center justify-center text-white font-bold text-sm shadow-md">CF</div>
-          <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">CampusFlow</span>
+    <aside
+      className="fixed inset-y-0 left-0 z-50 hidden w-64 lg:flex flex-col"
+      style={{ backgroundColor: 'var(--color-paper)', borderRight: '1px solid var(--color-rule)' }}
+    >
+      {/* Brand */}
+      <div className="flex items-center h-16 px-6 border-b" style={{ borderColor: 'var(--color-rule)' }}>
+        <div className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--primary-foreground)' }}>CF</span>
+          <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--color-ink)' }}>CampusFlow</span>
         </div>
       </div>
-      
+
+      {/* Nav items */}
       <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4 px-2">Menu</div>
+        <p className="text-xs font-semibold uppercase tracking-[0.1em] mb-4 px-2" style={{ color: 'var(--color-muted)' }}>Menu</p>
         {navItems.map((item) => {
           const isActive = pathname === item.href
           const Icon = item.icon
@@ -43,26 +48,32 @@ export function Sidebar() {
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-sm ${
                 isActive
-                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-slate-200'
+                  ? 'font-medium'
+                  : 'font-normal hover:opacity-70'
               }`}
+              style={{
+                backgroundColor: isActive ? 'var(--color-accent)' : 'transparent',
+                color: isActive ? 'var(--primary-foreground)' : 'var(--color-ink-2)',
+              }}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600 dark:text-blue-500' : ''}`} />
+              <Icon className="w-4 h-4" />
               {item.name}
             </Link>
           )
         })}
       </div>
 
-      <div className="p-4 border-t border-slate-200 dark:border-slate-800">
-        <button 
+      {/* Logout */}
+      <div className="p-4 border-t" style={{ borderColor: 'var(--color-rule)' }}>
+        <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm transition-all hover:opacity-70"
+          style={{ color: 'var(--color-ink-2)' }}
         >
-          <LogOut className="w-5 h-5" />
-          <span className="font-medium">Logout</span>
+          <LogOut className="w-4 h-4" />
+          <span>Logout</span>
         </button>
       </div>
     </aside>

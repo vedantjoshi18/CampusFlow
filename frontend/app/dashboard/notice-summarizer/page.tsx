@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FileText, Calendar as CalendarIcon, MessageCircle, Sparkles, Loader2, ArrowRight } from 'lucide-react'
+import { FileText, Calendar as CalendarIcon, MessageCircle, Loader2, ArrowRight } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 
 export default function NoticeSummarizerPage() {
@@ -46,48 +46,58 @@ export default function NoticeSummarizerPage() {
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-4xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-          <Sparkles className="w-8 h-8 text-blue-500" />
+    <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-10">
+      {/* Manifesto-style heading */}
+      <div className="space-y-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.1em]" style={{ color: 'var(--color-accent)' }}>
+          AI Tool
+        </p>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: 'var(--color-ink)' }}>
           Notice Summarizer
         </h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400 text-lg">
-          Paste any long, confusing college notice and our AI will extract exactly what you need to know.
+        <p className="text-base" style={{ color: 'var(--color-ink-2)' }}>
+          Paste college notices to extract actionable items and dates.
         </p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Input Section */}
-        <div className="space-y-4 bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+        <div
+          className="space-y-4 rounded-xl p-6 border relative"
+          style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-rule)' }}
+        >
+          <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>
             Paste College Notice
           </label>
           <textarea
-            className="w-full h-80 p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none text-slate-700 dark:text-slate-300"
-            placeholder="E.g. Dear students, this is to inform you that the mid-term examinations for the upcoming semester..."
+            className="w-full h-80 p-4 rounded-lg border transition-colors resize-none text-sm leading-relaxed"
+            style={{
+              backgroundColor: 'var(--color-paper)',
+              borderColor: 'var(--color-rule)',
+              color: 'var(--color-ink)',
+            }}
+            placeholder="E.g. Dear students, this is to inform you that the mid-term examinations..."
             value={noticeText}
             onChange={(e) => setNoticeText(e.target.value)}
           />
 
-          {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
+          {error && <p className="text-sm font-medium" style={{ color: 'var(--destructive)' }}>{error}</p>}
 
           <button
             onClick={handleSummarize}
             disabled={!noticeText.trim() || loading}
-            className="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-medium shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center gap-2 group/btn"
+            className="w-full py-3 px-6 rounded-lg text-sm font-semibold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group/btn"
+            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--primary-foreground)' }}
           >
             {loading ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" />
                 Analyzing Notice...
               </>
             ) : (
               <>
                 Generate Summary
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-0.5 transition-transform" />
               </>
             )}
           </button>
@@ -96,18 +106,23 @@ export default function NoticeSummarizerPage() {
         {/* Results Section */}
         <div className="space-y-6">
           {result ? (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500 fill-mode-both">
-              
+            <div className="space-y-6">
               {/* Summary Card */}
-              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-                <h3 className="text-lg font-bold flex items-center gap-2 text-slate-800 dark:text-slate-100 mb-4">
-                  <FileText className="w-5 h-5 text-emerald-500" />
+              <div
+                className="rounded-xl p-6 border"
+                style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-rule)' }}
+              >
+                <h3 className="text-base font-semibold flex items-center gap-2 mb-4" style={{ color: 'var(--color-ink)' }}>
+                  <FileText className="w-4 h-4" style={{ color: 'oklch(55% 0.14 150)' }} />
                   Key Takeaways
                 </h3>
                 <ul className="space-y-3">
                   {result.summary.map((point, i) => (
-                    <li key={i} className="flex items-start gap-3 text-slate-600 dark:text-slate-400">
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm font-bold">
+                    <li key={i} className="flex items-start gap-3 text-sm" style={{ color: 'var(--color-ink-2)' }}>
+                      <span
+                        className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold"
+                        style={{ backgroundColor: 'oklch(55% 0.14 150 / 0.12)', color: 'oklch(50% 0.12 150)' }}
+                      >
                         {i + 1}
                       </span>
                       <span className="pt-0.5 leading-relaxed">{point}</span>
@@ -118,15 +133,24 @@ export default function NoticeSummarizerPage() {
 
               {/* Event Date Card */}
               {result.eventDate && (
-                <div className="bg-blue-50 dark:bg-blue-900/10 rounded-3xl p-6 border border-blue-100 dark:border-blue-900/30 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 flex-shrink-0">
-                    <CalendarIcon className="w-6 h-6" />
+                <div
+                  className="rounded-xl p-5 border flex items-center gap-4"
+                  style={{
+                    backgroundColor: 'oklch(50% 0.16 250 / 0.06)',
+                    borderColor: 'oklch(50% 0.16 250 / 0.12)',
+                  }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: 'oklch(50% 0.16 250 / 0.1)', color: 'var(--color-accent)' }}
+                  >
+                    <CalendarIcon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wider mb-1">
-                      Event Date Detected
+                    <h3 className="text-xs font-semibold uppercase tracking-[0.08em] mb-0.5" style={{ color: 'var(--color-ink-2)' }}>
+                      Event Date
                     </h3>
-                    <p className="text-xl font-bold text-slate-900 dark:text-white">
+                    <p className="text-base font-semibold" style={{ color: 'var(--color-ink)' }}>
                       {new Date(result.eventDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                   </div>
@@ -134,29 +158,39 @@ export default function NoticeSummarizerPage() {
               )}
 
               {/* WhatsApp Draft Card */}
-              <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
-                <h3 className="text-lg font-bold flex items-center gap-2 text-slate-800 dark:text-slate-100 mb-3">
-                  <MessageCircle className="w-5 h-5 text-emerald-500" />
+              <div
+                className="rounded-xl p-6 border"
+                style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-rule)' }}
+              >
+                <h3 className="text-sm font-semibold flex items-center gap-2 mb-3" style={{ color: 'var(--color-ink)' }}>
+                  <MessageCircle className="w-4 h-4" style={{ color: 'oklch(55% 0.14 150)' }} />
                   WhatsApp Draft
                 </h3>
-                <div className="bg-slate-50 dark:bg-slate-950 rounded-2xl p-4 text-slate-600 dark:text-slate-400 font-medium italic relative">
-                  "{result.whatsappDraft}"
+                <div
+                  className="rounded-lg p-4 text-sm leading-relaxed"
+                  style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink-2)' }}
+                >
+                  &ldquo;{result.whatsappDraft}&rdquo;
                 </div>
-                <button 
+                <button
                   onClick={() => navigator.clipboard.writeText(result.whatsappDraft)}
-                  className="mt-4 text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
+                  className="mt-3 text-sm font-medium transition-all hover:opacity-70"
+                  style={{ color: 'var(--color-accent)' }}
                 >
                   Copy to Clipboard
                 </button>
               </div>
-
             </div>
           ) : (
-            <div className="h-full bg-slate-50 dark:bg-slate-900/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center p-8 text-center text-slate-400">
-              <Sparkles className="w-12 h-12 mb-4 opacity-20" />
-              <p className="font-medium text-lg text-slate-500">Awaiting Notice</p>
-              <p className="text-sm mt-2 max-w-sm">Paste a notice on the left and hit generate to see the magic happen.</p>
+            <div
+              className="h-full rounded-xl border flex flex-col items-center justify-center p-8 text-center"
+              style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-rule)' }}
+            >
+              <FileText className="w-8 h-8 mb-4" style={{ color: 'var(--color-muted)' }} />
+              <p className="text-base font-medium" style={{ color: 'var(--color-ink-2)' }}>Awaiting Notice</p>
+              <p className="text-sm mt-1 max-w-sm" style={{ color: 'var(--color-muted)' }}>
+                Paste a notice on the left to extract its details.
+              </p>
             </div>
           )}
         </div>

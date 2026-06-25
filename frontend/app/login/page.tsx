@@ -18,8 +18,7 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
-    // We use Supabase client directly since Next.js + Supabase handles secure sessions gracefully
+
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -39,26 +38,38 @@ export default function LoginPage() {
     <AuthLayout title="Welcome back" subtitle="Enter your credentials to access your account.">
       <form onSubmit={handleLogin} className="space-y-6">
         {error && (
-          <div className="p-4 text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 rounded-xl border border-red-100 dark:border-red-900/50">
+          <div
+            className="p-4 text-sm font-medium rounded-lg border"
+            style={{
+              backgroundColor: 'oklch(60% 0.20 25 / 0.08)',
+              color: 'var(--destructive)',
+              borderColor: 'oklch(60% 0.20 25 / 0.15)',
+            }}
+          >
             {error}
           </div>
         )}
         <div className="space-y-5">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email address</label>
+            <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Email address</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+              className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+              style={{
+                backgroundColor: 'var(--color-paper)',
+                borderColor: 'var(--color-rule)',
+                color: 'var(--color-ink)',
+              }}
               placeholder="student@college.edu"
             />
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
-              <Link href="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+              <label className="block text-sm font-semibold" style={{ color: 'var(--color-ink-2)' }}>Password</label>
+              <Link href="/forgot-password" className="text-sm font-medium transition-opacity hover:opacity-70" style={{ color: 'var(--color-accent)' }}>
                 Forgot password?
               </Link>
             </div>
@@ -67,7 +78,12 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+              className="w-full px-4 py-3 rounded-lg border transition-all outline-none text-sm"
+              style={{
+                backgroundColor: 'var(--color-paper)',
+                borderColor: 'var(--color-rule)',
+                color: 'var(--color-ink)',
+              }}
               placeholder="••••••••"
             />
           </div>
@@ -75,18 +91,19 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100 flex justify-center items-center"
+          className="w-full py-3 px-4 rounded-lg text-sm font-semibold transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100 flex justify-center items-center"
+          style={{ backgroundColor: 'var(--color-accent)', color: 'var(--primary-foreground)' }}
         >
           {loading ? (
-            <div className="w-5 h-5 border-2 border-slate-400 border-t-white dark:border-slate-300 dark:border-t-slate-900 rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--primary-foreground)', borderTopColor: 'transparent' }} />
           ) : (
             'Sign In'
           )}
         </button>
       </form>
-      <div className="text-center text-slate-500 dark:text-slate-400 mt-6 font-medium">
+      <div className="text-center mt-6 text-sm font-medium" style={{ color: 'var(--color-ink-2)' }}>
         Don&apos;t have an account?{' '}
-        <Link href="/register" className="font-bold text-blue-600 hover:text-blue-500 transition-colors">
+        <Link href="/register" className="font-semibold transition-opacity hover:opacity-70" style={{ color: 'var(--color-accent)' }}>
           Create one now
         </Link>
       </div>

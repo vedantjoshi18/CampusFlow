@@ -70,59 +70,67 @@ export default function TasksPage() {
   }).length
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            My Tasks
-          </h1>
-          <p className="text-slate-500 mt-1 text-base">
-            {pendingCount} pending · {completedCount} done
+    <div className="p-8 md:p-12 max-w-4xl mx-auto space-y-10">
+      {/* Manifesto-style heading */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="space-y-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.1em]" style={{ color: 'var(--color-accent)' }}>
+            {pendingCount} pending &middot; {completedCount} done
             {dueToday > 0 && (
-              <span className="ml-2 text-red-500 font-semibold">· {dueToday} due today!</span>
+              <span className="ml-2" style={{ color: 'var(--destructive)' }}>&middot; {dueToday} due today</span>
             )}
           </p>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight" style={{ color: 'var(--color-ink)' }}>
+            My Tasks
+          </h1>
         </div>
         <button
           id="open-add-task-modal"
           onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 text-white font-bold text-sm shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-emerald-600 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90 active:scale-[0.98]"
+          style={{ backgroundColor: 'var(--color-accent)', color: 'var(--primary-foreground)' }}
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-4 h-4" />
           Add Task
         </button>
       </div>
 
-      {/* Stats strip */}
+      {/* Letter-style stat strip — compact, clean */}
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: 'Total', value: tasks.length, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-          { label: 'Pending', value: pendingCount, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-900/20' },
-          { label: 'Done', value: completedCount, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-900/20' },
+          { label: 'Total', value: tasks.length, accent: 'var(--color-accent)' },
+          { label: 'Pending', value: pendingCount, accent: 'var(--color-accent-2)' },
+          { label: 'Done', value: completedCount, accent: 'oklch(55% 0.14 150)' },
         ].map(stat => (
-          <div key={stat.label} className={`${stat.bg} rounded-2xl p-4 text-center`}>
-            <div className={`text-3xl font-extrabold ${stat.color}`}>{stat.value}</div>
-            <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wide">{stat.label}</div>
+          <div
+            key={stat.label}
+            className="rounded-xl p-4 text-center border"
+            style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-rule)' }}
+          >
+            <div className="text-2xl font-bold tracking-tight" style={{ color: stat.accent }}>{stat.value}</div>
+            <div className="text-xs font-medium mt-1 uppercase tracking-[0.08em]" style={{ color: 'var(--color-ink-2)' }}>{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Filter tabs */}
-      <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/60 p-1 rounded-xl w-fit">
+      <div
+        className="flex items-center gap-1 p-1 rounded-lg w-fit border"
+        style={{ backgroundColor: 'var(--color-paper-2)', borderColor: 'var(--color-rule)' }}
+      >
         {TAB_CONFIG.map(({ key, label, icon: Icon }) => (
           <button
             key={key}
             id={`filter-tab-${key}`}
             onClick={() => setFilter(key)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-              filter === key
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
-            }`}
+            className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200"
+            style={{
+              backgroundColor: filter === key ? 'var(--color-surface)' : 'transparent',
+              color: filter === key ? 'var(--color-ink)' : 'var(--color-ink-2)',
+              boxShadow: filter === key ? '0 1px 3px rgba(0,0,0,0.06)' : 'none',
+            }}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-3.5 h-3.5" />
             {label}
           </button>
         ))}
@@ -131,20 +139,21 @@ export default function TasksPage() {
       {/* Content */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-          <p className="text-slate-500 font-medium">Loading your tasks…</p>
+          <Loader2 className="w-6 h-6 animate-spin" style={{ color: 'var(--color-accent)' }} />
+          <p className="text-sm font-medium" style={{ color: 'var(--color-ink-2)' }}>Loading your tasks...</p>
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
-            <AlertCircle className="w-7 h-7 text-red-500" />
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'oklch(60% 0.20 25 / 0.1)', color: 'var(--destructive)' }}>
+            <AlertCircle className="w-6 h-6" />
           </div>
-          <p className="text-red-600 dark:text-red-400 font-semibold">{error}</p>
+          <p className="text-sm font-semibold" style={{ color: 'var(--destructive)' }}>{error}</p>
           <button
             onClick={fetchTasks}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-sm font-semibold"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all border"
+            style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-rule)', color: 'var(--color-ink-2)' }}
           >
-            <RefreshCw className="w-4 h-4" /> Retry
+            <RefreshCw className="w-3.5 h-3.5" /> Retry
           </button>
         </div>
       ) : filteredTasks.length === 0 ? (
@@ -153,21 +162,25 @@ export default function TasksPage() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center justify-center py-24 gap-4 text-center"
         >
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-blue-900/20 dark:to-emerald-900/20 flex items-center justify-center">
-            <CheckSquare className="w-10 h-10 text-blue-400" />
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: 'oklch(50% 0.16 250 / 0.08)', color: 'var(--color-accent)' }}
+          >
+            <CheckSquare className="w-8 h-8" />
           </div>
           <div>
-            <p className="text-xl font-bold text-slate-700 dark:text-slate-200">
+            <p className="text-lg font-semibold" style={{ color: 'var(--color-ink)' }}>
               {filter === 'completed' ? 'No completed tasks yet' : filter === 'pending' ? 'All caught up!' : 'No tasks yet'}
             </p>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
+            <p className="text-sm mt-1" style={{ color: 'var(--color-ink-2)' }}>
               {filter === 'all' ? 'Click "Add Task" to get started.' : 'Switch to a different filter.'}
             </p>
           </div>
           {filter === 'all' && (
             <button
               onClick={() => setModalOpen(true)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-emerald-500 text-white font-bold text-sm shadow hover:shadow-md transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90"
+              style={{ backgroundColor: 'var(--color-accent)', color: 'var(--primary-foreground)' }}
             >
               <Plus className="w-4 h-4" /> Add your first task
             </button>
@@ -188,7 +201,6 @@ export default function TasksPage() {
         </AnimatePresence>
       )}
 
-      {/* Add Task Modal */}
       <AddTaskModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

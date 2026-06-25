@@ -16,21 +16,24 @@ interface TaskCardProps {
 const PRIORITY_CONFIG = {
   high: {
     label: 'High',
-    badge: 'bg-red-50 text-red-600 border-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/30',
-    dot: 'bg-red-500',
-    glow: 'hover:border-red-200 dark:hover:border-red-900/40',
+    badge: 'border-0',
+    accent: 'oklch(60% 0.20 25)',
+    bg: 'oklch(60% 0.20 25 / 0.1)',
+    text: 'oklch(55% 0.18 25)',
   },
   medium: {
     label: 'Medium',
-    badge: 'bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-900/30',
-    dot: 'bg-amber-400',
-    glow: 'hover:border-amber-200 dark:hover:border-amber-900/40',
+    badge: 'border-0',
+    accent: 'oklch(65% 0.16 75)',
+    bg: 'oklch(65% 0.16 75 / 0.1)',
+    text: 'oklch(60% 0.14 75)',
   },
   low: {
     label: 'Low',
-    badge: 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-900/30',
-    dot: 'bg-emerald-500',
-    glow: 'hover:border-emerald-200 dark:hover:border-emerald-900/40',
+    badge: 'border-0',
+    accent: 'oklch(55% 0.14 150)',
+    bg: 'oklch(55% 0.14 150 / 0.1)',
+    text: 'oklch(50% 0.12 150)',
   },
 }
 
@@ -79,16 +82,20 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className={`group relative bg-white dark:bg-slate-900 rounded-2xl border transition-all duration-200 shadow-sm hover:shadow-md ${priority.glow} ${
-        task.completed
-          ? 'border-slate-100 dark:border-slate-800 opacity-70'
-          : 'border-slate-100 dark:border-slate-800'
-      }`}
+      className="group relative rounded-xl border transition-all duration-200"
+      style={{
+        backgroundColor: task.completed ? 'var(--color-paper-2)' : 'var(--color-surface)',
+        borderColor: 'var(--color-rule)',
+        opacity: task.completed ? 0.7 : 1,
+      }}
     >
       {/* Priority accent bar */}
-      <div className={`absolute left-0 top-4 bottom-4 w-1 rounded-full ${priority.dot} ml-3`} />
+      <div
+        className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full"
+        style={{ backgroundColor: priority.accent, marginLeft: '12px' }}
+      />
 
-      <div className="pl-7 pr-4 py-4">
+      <div className="pl-7 pr-4 py-3.5">
         <div className="flex items-start gap-3">
           {/* Complete toggle */}
           <button
@@ -99,9 +106,9 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
             aria-label={task.completed ? 'Mark incomplete' : 'Mark complete'}
           >
             {task.completed ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+              <CheckCircle2 className="w-5 h-5" style={{ color: 'oklch(55% 0.14 150)' }} />
             ) : (
-              <Circle className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-slate-400" />
+              <Circle className="w-5 h-5" style={{ color: 'var(--color-rule)' }} />
             )}
           </button>
 
@@ -110,10 +117,11 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
             <div className="flex items-start justify-between gap-2">
               <h3
                 className={`font-semibold text-base leading-snug truncate transition-colors ${
-                  task.completed
-                    ? 'line-through text-slate-400 dark:text-slate-500'
-                    : 'text-slate-900 dark:text-white'
+                  task.completed ? 'line-through' : ''
                 }`}
+                style={{
+                  color: task.completed ? 'var(--color-ink-2)' : 'var(--color-ink)',
+                }}
               >
                 {task.title}
               </h3>
@@ -124,7 +132,10 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
                   <button
                     id={`task-expand-${task.id}`}
                     onClick={() => setExpanded(!expanded)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    className="p-1.5 rounded-md transition-colors"
+                    style={{ color: 'var(--color-ink-2)' }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--color-paper-2)'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <ChevronDown className={`w-4 h-4 transition-transform ${expanded ? 'rotate-180' : ''}`} />
                   </button>
@@ -133,7 +144,10 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
                   id={`task-delete-${task.id}`}
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+                  className="p-1.5 rounded-md transition-colors disabled:opacity-50"
+                  style={{ color: 'var(--color-ink-2)' }}
+                  onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'oklch(60% 0.20 25 / 0.1)'; e.currentTarget.style.color = 'var(--destructive)' }}
+                  onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'var(--color-ink-2)' }}
                   aria-label="Delete task"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -144,14 +158,20 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
             {/* Tags row */}
             <div className="flex flex-wrap items-center gap-2 mt-2">
               {/* Priority badge */}
-              <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-full border ${priority.badge}`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${priority.dot}`} />
+              <span
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-md"
+                style={{ backgroundColor: priority.bg, color: priority.text }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: priority.accent }} />
                 {priority.label}
               </span>
 
               {/* Subject */}
               {task.subject && (
-                <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 px-2.5 py-0.5 rounded-full border border-slate-100 dark:border-slate-700">
+                <span
+                  className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md"
+                  style={{ backgroundColor: 'var(--color-paper-2)', color: 'var(--color-ink-2)' }}
+                >
                   <Tag className="w-3 h-3" />
                   {task.subject}
                 </span>
@@ -159,11 +179,13 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
 
               {/* Deadline */}
               {deadline && (
-                <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full border ${
-                  deadline.urgent
-                    ? 'text-red-600 bg-red-50 border-red-100 dark:text-red-400 dark:bg-red-900/20 dark:border-red-900/30'
-                    : 'text-slate-500 bg-slate-50 border-slate-100 dark:text-slate-400 dark:bg-slate-800 dark:border-slate-700'
-                }`}>
+                <span
+                  className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md"
+                  style={{
+                    backgroundColor: deadline.urgent ? 'oklch(60% 0.20 25 / 0.1)' : 'var(--color-paper-2)',
+                    color: deadline.urgent ? 'var(--destructive)' : 'var(--color-ink-2)',
+                  }}
+                >
                   {deadline.urgent ? <Clock className="w-3 h-3" /> : <Calendar className="w-3 h-3" />}
                   {deadline.label}
                 </span>
@@ -178,7 +200,8 @@ export function TaskCard({ task, onUpdate, onDelete }: TaskCardProps) {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed overflow-hidden"
+                  className="mt-2 text-sm leading-relaxed overflow-hidden"
+                  style={{ color: 'var(--color-ink-2)' }}
                 >
                   {task.description}
                 </motion.p>

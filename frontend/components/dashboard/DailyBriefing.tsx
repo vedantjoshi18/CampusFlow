@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Sparkles, Loader2 } from 'lucide-react'
+import { Info, Loader2 } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { createClient } from '@/utils/supabase/client'
 
@@ -23,7 +23,7 @@ export function DailyBriefing() {
             'Authorization': `Bearer ${session.access_token}`
           }
         })
-        
+
         const result = await response.json()
         if (result.success && result.data?.briefing) {
           setBriefing(result.data.briefing)
@@ -34,28 +34,27 @@ export function DailyBriefing() {
         setLoading(false)
       }
     }
-    
+
     fetchBriefing()
   }, [])
 
   return (
-    <Card className="border-0 shadow-lg bg-gradient-to-br from-indigo-900 to-slate-800 text-white rounded-2xl relative overflow-hidden group">
-      <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-700" />
-      <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-        <CardTitle className="text-sm font-bold text-indigo-300 uppercase tracking-wide flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-yellow-400" />
-          AI Daily Briefing
+    <Card className="border shadow-sm transition-all duration-200" style={{ borderColor: 'var(--color-rule)', backgroundColor: 'var(--color-surface)' }}>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-ink-2)' }}>
+          <Info className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
+          Daily Briefing
         </CardTitle>
       </CardHeader>
-      <CardContent className="relative z-10 min-h-[80px] flex items-center">
+      <CardContent className="min-h-[80px] flex items-center">
         {loading ? (
-          <div className="flex items-center gap-3 text-slate-400">
-            <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm font-medium">Analyzing your tasks...</span>
+          <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--color-ink-2)' }}>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Analyzing tasks...</span>
           </div>
         ) : (
-          <p className="text-base font-medium leading-relaxed text-slate-100">
-            {briefing || "You're all caught up! Take a break or add some new tasks to get started."}
+          <p className="text-base leading-relaxed" style={{ color: 'var(--color-ink)' }}>
+            {briefing || "You're all caught up. No pending tasks for today."}
           </p>
         )}
       </CardContent>
